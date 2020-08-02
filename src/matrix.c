@@ -38,6 +38,7 @@ void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 	}
 }
 
+
 MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	int size, j, i, aux;
 	char ch;
@@ -61,13 +62,58 @@ MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	  else{
 		  fscanf (archivo, "%d", &aux);
 		  matrizAdyacencia->adyacencias[i-1][j-1] = aux;
-		  matrizAdyacencia->adyacencias[j-1][i-1] = aux;
 		  i = 0;
 		  j = 0;
 	  }
     }
 	fclose(archivo);
 	return matrizAdyacencia;
+}
+
+MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
+	//se asume que el vertice que se ingresa no tiene peso 0
+	if(matrix->vertices <= k || matrix->vertices <= l){
+		return NULL;
+	}
+	int maximo = matrix->vertices;
+	int cantidadDeAdy = 0;
+	int peso = matrix->adyacencias[k][l];
+	matrix->adyacencias[k][l] = 0;
+
+	//contar la cantidad de adyacentes
+	for (int i = 0; i < maximo; i++){
+		for (int j = 0; j < maximo; j++){
+			int valor = matrix->adyacencias[i][j];
+			if((i == k || j == k || i == l || j == l) && valor != 0){
+				cantidadDeAdy += 1;
+			}
+		}
+	}
+	
+	
+	printf("Cantidad de adyacentes = %d \n",cantidadDeAdy);
+	printf("El peso es = %d \n",peso);
+	//si la division es decimal hay que sumarle uno ya que no se puede pagar una fraccion
+	if(peso % cantidadDeAdy != 0){
+		peso = peso / cantidadDeAdy + 1;
+	}
+	else{
+		peso /= cantidadDeAdy;
+	}
+
+	printf("El peso es = %d \n",peso);
+
+	//ver que vertices son adyacentes
+	for (int i = 0; i < maximo; i++){
+		for (int j = 0; j < maximo; j++){
+			int valor = matrix->adyacencias[i][j];
+			if((i == k || j == k || i == l || j == l) && valor != 0){
+				matrix->adyacencias[i][j] += peso;
+			}
+		}
+	}
+
+	return matrix;
 }
 
 int main(){
@@ -77,6 +123,7 @@ int main(){
 		return -1;
 	}
 	imprimirMatrizAdyacencia(matrizAdyacencia);
-	
+	matrizAdyacencia = eliminarCamino(0,2,matrizAdyacencia);
+	imprimirMatrizAdyacencia(matrizAdyacencia);
     return 0;
 }
