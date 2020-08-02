@@ -95,10 +95,11 @@ MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 	printf("El peso es = %d \n",peso);
 	//si la division es decimal hay que sumarle uno ya que no se puede pagar una fraccion
 	if(peso % cantidadDeAdy != 0){
-		peso = peso / cantidadDeAdy + 1;
+		peso = peso / cantidadDeAdy + 2;
 	}
 	else{
 		peso /= cantidadDeAdy;
+		peso += 1;
 	}
 
 	printf("El peso es = %d \n",peso);
