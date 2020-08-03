@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct matrizGrafo {
-	int vertices;
-	int** adyacencias;
-}MatrizGrafo;
+#include "../incl/matrix.h"
 
 // Función que genera una matriz cuadrada como arreglo de arreglos, dado un tamaño entero "n".
 // Entrada: Número de vértices del grafo
