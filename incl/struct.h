@@ -4,6 +4,8 @@
 typedef struct matrizGrafo {
 	int vertices;
 	int** adyacencias;
+	int id;
+	int idAnterior;
 }MatrizGrafo;
 
 #endif

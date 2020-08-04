@@ -11,11 +11,33 @@ MatrizGrafo* generarMatrizGrafo(int vertices) {
 	matriz->vertices = vertices;
 	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
 	int i;
+	matriz->id = 0;
 	for (i = 0; i < vertices; i++) {
 		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
 	}
 	return matriz;
 }
+
+MatrizGrafo* generarSubMatriz(MatrizGrafo* aCopiar, int id){
+	int vertices = aCopiar->vertices; 
+	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
+	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
+	matriz->vertices = vertices;
+	imprimirMatrizAdyacencia(aCopiar);
+	for (int i = 0; i < vertices; i++) {
+		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
+	}
+
+	matriz->idAnterior = aCopiar->id;
+	for(int i = 0; i < vertices; i++){
+		for(int j = 0; j < vertices; j++){
+			matriz->adyacencias[i][j] = aCopiar->adyacencias[i][j];
+		}
+	}
+	return matriz;
+}
+
+
 
 //por favor remplazar el 10 y la cantidad de espacios para que se vea bonito onda si son 100 darle un espacio mas
 void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
@@ -33,7 +55,6 @@ void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 		printf("\n");
 	}
 }
-
 
 MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	int size, j, i, aux;
@@ -113,14 +134,3 @@ MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 	return matrix;
 }
 
-int main(){
-	MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz("entrada.in");
-	if (matrizAdyacencia == NULL) {
-		printf("Archivo no encontrado.");
-		return -1;
-	}
-	imprimirMatrizAdyacencia(matrizAdyacencia);
-	matrizAdyacencia = eliminarCamino(0,2,matrizAdyacencia);
-	imprimirMatrizAdyacencia(matrizAdyacencia);
-    return 0;
-}

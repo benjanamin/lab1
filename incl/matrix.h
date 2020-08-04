@@ -7,5 +7,6 @@ MatrizGrafo* generarMatrizGrafo(int vertices);
 void imprimirMatrizAdyacencia(MatrizGrafo* matriz);
 MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo);
 MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix);
+MatrizGrafo* generarSubMatriz(MatrizGrafo* aCopiar, int id);
 
 #endif

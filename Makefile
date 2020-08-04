@@ -9,7 +9,7 @@ OBJECTS := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SOURCES))
 
 all: $(OBJECTS)
 	echo "Generando ejecutable..."
-	gcc $^ -o ejemplo
+	gcc $^ -o salida
 
 
 $(OBJ)/%.o: $(SRC)/%.c
