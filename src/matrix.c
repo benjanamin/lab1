@@ -12,6 +12,7 @@ MatrizGrafo* generarMatrizGrafo(int vertices) {
 	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
 	int i;
 	matriz->id = 0;
+	matriz->idAnterior = 0;
 	for (i = 0; i < vertices; i++) {
 		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
 	}
@@ -23,12 +24,27 @@ MatrizGrafo* generarSubMatriz(MatrizGrafo* aCopiar, int id){
 	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
 	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
 	matriz->vertices = vertices;
-	imprimirMatrizAdyacencia(aCopiar);
+
 	for (int i = 0; i < vertices; i++) {
 		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
 	}
-
 	matriz->idAnterior = aCopiar->id;
+	for(int i = 0; i < vertices; i++){
+		for(int j = 0; j < vertices; j++){
+			matriz->adyacencias[i][j] = aCopiar->adyacencias[i][j];
+		}
+	}
+	return matriz;
+}
+
+MatrizGrafo* copiarMatriz(MatrizGrafo* aCopiar){
+	int vertices = aCopiar->vertices; 
+	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
+	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
+	matriz->vertices = vertices;
+	for (int i = 0; i < vertices; i++) {
+		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
+	}
 	for(int i = 0; i < vertices; i++){
 		for(int j = 0; j < vertices; j++){
 			matriz->adyacencias[i][j] = aCopiar->adyacencias[i][j];
@@ -92,6 +108,9 @@ MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 	if(matrix->vertices <= k || matrix->vertices <= l){
 		return NULL;
 	}
+	if(matrix->adyacencias[k][l] == 0){
+		return NULL;
+	}
 	int maximo = matrix->vertices;
 	int cantidadDeAdy = 0;
 	int peso = matrix->adyacencias[k][l];
@@ -106,20 +125,14 @@ MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 			}
 		}
 	}
-	
-	
-	printf("Cantidad de adyacentes = %d \n",cantidadDeAdy);
-	printf("El peso es = %d \n",peso);
 	//si la division es decimal hay que sumarle uno ya que no se puede pagar una fraccion
+	cantidadDeAdy += 1;
 	if(peso % cantidadDeAdy != 0){
-		peso = peso / cantidadDeAdy + 2;
+		peso = peso / cantidadDeAdy + 1;
 	}
 	else{
 		peso /= cantidadDeAdy;
-		peso += 1;
 	}
-
-	printf("El peso es = %d \n",peso);
 
 	//ver que vertices son adyacentes
 	for (int i = 0; i < maximo; i++){

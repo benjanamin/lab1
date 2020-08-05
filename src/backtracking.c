@@ -2,6 +2,30 @@
 #include <stdlib.h>
 #include "../incl/matrix.h"
 #include "../incl/backtracking.h"
+int id = 1; //variable global que marca el id de todos
+//mucho codigo de backtracking lo tenia de antes xD (metodos)
+
+MatrizGrafo** agregarEstado(MatrizGrafo** lista, int * elementos, MatrizGrafo* estado){
+	MatrizGrafo** nuevaLista = (MatrizGrafo**)malloc(sizeof(MatrizGrafo*)*(*elementos+1));
+	for (int i = 0; i < *elementos; ++i){
+		nuevaLista[i] = lista[i];
+	}
+	nuevaLista[*elementos] = estado;
+	*elementos = *elementos+1;
+	free(lista);
+	return nuevaLista;
+}
+
+MatrizGrafo** sacarElemento(MatrizGrafo** lista, int * elementos){
+	MatrizGrafo** nuevaLista = (MatrizGrafo**)malloc(sizeof(MatrizGrafo*)*(*elementos-1));
+	for (int i = 1; i < *elementos; ++i){
+		nuevaLista[i-1]=lista[i];
+	}
+	*elementos = *elementos-1;
+	free(lista);
+	return nuevaLista;
+}
+
 int conexiones(MatrizGrafo* matriz, int i){
     int aux = 0;
     for(int j = 0; j < matriz->vertices ; j++){
@@ -17,6 +41,8 @@ int conexiones(MatrizGrafo* matriz, int i){
     return aux;
 }
 
+// ve si una matriz es solucion
+// entrada una matriz
 int esSolucion(MatrizGrafo* matriz){
     int arrayVertices[matriz->vertices];
     int largo = matriz->vertices;
@@ -29,17 +55,103 @@ int esSolucion(MatrizGrafo* matriz){
     return 1;
 }
 
+//ve si cumple las condiciones para ser una posible solucion
+int esPosibleSolucion(MatrizGrafo* matriz){
+    int arrayVertices[matriz->vertices];
+    int largo = matriz->vertices;
+    for(int i = 0; i < largo; i++){
+        arrayVertices[i] = conexiones(matriz, i);
+        if(arrayVertices[i] <= 0){
+            return 0;
+        }
+    }
+    return 1;
+}
+int sonIguales(MatrizGrafo* matriz1, MatrizGrafo* matriz2){
+    int largo = matriz1->vertices;
+    for(int i = 0; i < largo; i++){
+        for(int j = i + 1; j < largo; j++){
+            if(matriz1->adyacencias[i][j] != matriz2->adyacencias[i][j]){
+                return 0; //son distintas
+            }
+        }
+    }
+    return 1; //son iguales
+}
 
+int esSolucionRepetida(MatrizGrafo** soluciones, int* canSoluciones, MatrizGrafo* solucion){
+    for(int i = 0; i < *canSoluciones; i++){
+        if(sonIguales(soluciones[i],solucion)){
+            return 1; //esta repetida           
+        }
+    }
+    return 0; //no esta repetida
+}
+//genera hijos dado un padre y los añade a la lista
+//entradas:una lista de matricesGrafo , &NumerodeElementosdeLaLista, la matriz padre
+MatrizGrafo** generarHijos(MatrizGrafo** abiertos, int* canAbiertos, MatrizGrafo* padre){
+    MatrizGrafo* aux;
+    int largo = padre->vertices;
+    for(int i = 0; i < largo; i++){
+        for(int j = i + 1; j < largo; j++){
+            if(padre->adyacencias[i][j] != 0){
+                aux = copiarMatriz(padre);
+                aux = eliminarCamino(i, j, aux);
+                if(esPosibleSolucion(aux) && aux != NULL){
+                    id += 1;
+                    aux->idAnterior = padre->id;
+                    aux->id = id;
+                    abiertos = agregarEstado(abiertos, canAbiertos, aux);
+                }
+
+            }
+        }
+    }
+    return abiertos;
+}
+
+
+void backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, MatrizGrafo** soluciones,int* canAbiertos, int* canCerrados, int* canSoluciones){
+    MatrizGrafo* aux;
+    if(*canAbiertos <= 0){
+        return;
+    }
+    else{
+       
+        aux = abiertos[0];
+        cerrados = agregarEstado(cerrados, canCerrados, aux);
+        abiertos = sacarElemento(abiertos, canAbiertos);
+        if(esSolucion(aux) && !esSolucionRepetida(soluciones, canSoluciones, aux)){
+            printf("id : %d  id anterior: %d \n", aux->id ,aux->idAnterior);
+            imprimirMatrizAdyacencia(aux);
+            soluciones = agregarEstado(soluciones, canSoluciones, aux);
+            return backTracking(abiertos, cerrados, soluciones, canAbiertos, canCerrados, canSoluciones);
+        }
+        else{
+            
+            abiertos = generarHijos(abiertos, canAbiertos, aux);
+            return backTracking(abiertos, cerrados, soluciones, canAbiertos, canCerrados, canSoluciones);
+        }
+    }
+
+}
 int main(){
+    //cosas iniciales
     MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz("entrada.in");
-    MatrizGrafo* copia = generarSubMatriz(matrizAdyacencia,2);
-    imprimirMatrizAdyacencia(copia);
 	if (matrizAdyacencia == NULL) {
 		printf("Archivo no encontrado.");
 		return -1;
 	}
-    printf("%d \n" ,esSolucion(matrizAdyacencia));
-	matrizAdyacencia = eliminarCamino(0,2,matrizAdyacencia);
-	imprimirMatrizAdyacencia(matrizAdyacencia);
+    printf("\n");
+    int canAbiertos = 0;
+	int canCerrados = 0;
+    int canSoluciones = 0;
+
+    MatrizGrafo ** soluciones = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canSoluciones);
+	MatrizGrafo ** abiertos = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canAbiertos);
+	MatrizGrafo ** cerrados = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canCerrados);
+    abiertos = agregarEstado(abiertos, &canAbiertos, matrizAdyacencia);
+    backTracking(abiertos, cerrados, soluciones, &canAbiertos, &canCerrados, &canSoluciones);
+    printf("termine");
     return 0;
 }
