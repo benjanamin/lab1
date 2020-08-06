@@ -28,24 +28,9 @@ MatrizGrafo** sacarElemento(MatrizGrafo** lista, int * elementos){
 	return nuevaLista;
 }
 
-int conexiones(MatrizGrafo* matriz, int i){
-    int aux = 0;
-    for(int j = 0; j < matriz->vertices ; j++){
-        //revisar columna i
-        if(matriz->adyacencias[j][i] != 0){
-            aux += 1;
-        }
-        //revisar fila
-        if(matriz->adyacencias[i][j]){
-            aux += 1;
-        }
-    }
-    return aux;
-}
-
-// ve si una matriz es solucion
-// entrada una matriz
-
+// ve si una matriz es igual a otra
+// Entrada: dos matrices
+//salida: un booleano que indica si son iguales o no
 
 int sonIguales(MatrizGrafo* matriz1, MatrizGrafo* matriz2){
     int largo = matriz1->vertices;
@@ -89,10 +74,20 @@ MatrizGrafo** generarHijos(MatrizGrafo** abiertos, int* canAbiertos, MatrizGrafo
     return abiertos;
 }
 
+// Libera una lista y su matriz
+void freeLista(MatrizGrafo** lista, int* tamano){
+    for(int i = 0; i < *tamano; i++){
+        freeMatriz(lista[i]);
+    }
+    free(lista);
+}
+
 
 MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, MatrizGrafo** soluciones,int* canAbiertos, int* canCerrados, int* canSoluciones, MatrizGrafo* inicial){
     MatrizGrafo* aux;
     if(*canAbiertos <= 0){
+        freeLista(cerrados,canCerrados);
+        free(abiertos);
         return soluciones;
     }
     else{
@@ -104,7 +99,6 @@ MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, Matri
             abiertos = agregarEstado(abiertos, canAbiertos, aux);
 
             return backTracking(abiertos, cerrados, soluciones, canAbiertos, canCerrados, canSoluciones, inicial);
-            
         }
         
         else{
@@ -112,8 +106,9 @@ MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, Matri
             return backTracking(abiertos, cerrados, soluciones, canAbiertos, canCerrados, canSoluciones, inicial);
         }
     }
-
 }
+
+
 int main(){
     //cosas iniciales
     MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz("entrada.in");
@@ -138,6 +133,8 @@ int main(){
         printf("id: %d \n", soluciones[i]->id);
         imprimirMatrizAdyacencia(soluciones[i]);
     }
+    
+    freeLista(soluciones,&canSoluciones);
     printf("termine \n");
     return 0;
 }

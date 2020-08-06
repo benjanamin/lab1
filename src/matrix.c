@@ -18,25 +18,9 @@ MatrizGrafo* generarMatrizGrafo(int vertices) {
 	}
 	return matriz;
 }
-
-MatrizGrafo* generarSubMatriz(MatrizGrafo* aCopiar, int id){
-	int vertices = aCopiar->vertices; 
-	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
-	matriz->adyacencias = (int**)malloc(vertices * sizeof(int*));
-	matriz->vertices = vertices;
-
-	for (int i = 0; i < vertices; i++) {
-		matriz->adyacencias[i] = (int*)calloc(vertices, sizeof(int));
-	}
-	matriz->idAnterior = aCopiar->id;
-	for(int i = 0; i < vertices; i++){
-		for(int j = 0; j < vertices; j++){
-			matriz->adyacencias[i][j] = aCopiar->adyacencias[i][j];
-		}
-	}
-	return matriz;
-}
-
+// Función que copia una matriz
+// Entrada: La matriz a copiar
+// Salida: Estructura MatrizGrafo*.
 MatrizGrafo* copiarMatriz(MatrizGrafo* aCopiar){
 	int vertices = aCopiar->vertices; 
 	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
@@ -54,7 +38,7 @@ MatrizGrafo* copiarMatriz(MatrizGrafo* aCopiar){
 }
 
 
-
+//Funcion que imprime la matriz
 //por favor remplazar el 10 y la cantidad de espacios para que se vea bonito onda si son 100 darle un espacio mas
 void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 	int i, j;
@@ -71,7 +55,9 @@ void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 		printf("\n");
 	}
 }
-
+// Función que lee el archivo y lo transforma en una matriz
+// Entrada: El nombre del archivo
+// Salida: Estructura MatrizGrafo*.
 MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	int size, j, i, aux;
 	char ch;
@@ -103,13 +89,16 @@ MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	return matrizAdyacencia;
 }
 
+// Función que elimina un camino dado un punto y traspasa el peso a sus adyacencias
+// Entrada: el camino IJ a ser eliminado y la matriz
+// Salida: Estructura MatrizGrafo*.
 MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 	//se asume que el vertice que se ingresa no tiene peso 0
 	if(matrix->vertices <= k || matrix->vertices <= l){
-		return NULL;
+		return matrix;
 	}
 	if(matrix->adyacencias[k][l] == 0){
-		return NULL;
+		return matrix;
 	}
 	int maximo = matrix->vertices;
 	int cantidadDeAdy = 0;
@@ -145,5 +134,15 @@ MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix){
 	}
 
 	return matrix;
+}
+
+//funcion que libera la memoria de las matrices
+
+void freeMatriz(MatrizGrafo* matriz){
+	for(int i = 0; i < matriz->vertices; i++){
+		free(matriz->adyacencias[i]);
+	}
+	free(matriz->adyacencias);
+	free(matriz);
 }
 

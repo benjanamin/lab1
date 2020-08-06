@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include "../incl/matrix.h"
 
-
-int top(int* cola,int largo){
-	return cola[largo-1];
-}
 //A�ade un numero a la cola
 //Entrada: una cola, el largo y el numero a a�adir 
 //Salida:  una cola
@@ -33,17 +29,17 @@ int* sacar(int* cola,int* largo){
 		for(int i=0;i<*largo;i++){
 			aux[i]=cola[i+1];
 		}
-		
 		return aux;
 	}
 }
 
-
+//Funcion booleana que ve si un grafo es conexo
 int esConexo(MatrizGrafo* matriz){
     int* cola= (int*) malloc(sizeof(int));
+	int* visitados=(int*)malloc(sizeof(int)*matriz->vertices);
 	int largo=0;
     int inicio = 0;
-	int* visitados=(int*)malloc(sizeof(int)*matriz->vertices);
+	
     for(int i=0;i<matriz->vertices;i++){
 		visitados[i]=0;
 	}
@@ -63,13 +59,15 @@ int esConexo(MatrizGrafo* matriz){
 			}
 		}
 	}
-	
+	free(cola);
 	for(int i = 0; i < matriz->vertices; i++){
 		if(visitados[i] != 1){
+			free(visitados);
 			return 0;
 			
 		}
 	}
+	free(visitados);
 	return 1;
     
 }
