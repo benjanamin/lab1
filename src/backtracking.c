@@ -108,36 +108,61 @@ MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, Matri
     }
 }
 
+//Recibe una matriz y determina su costo total
+int costoMatriz(MatrizGrafo* matriz){
+    int costo = 0;
+    for(int i = 0; i < matriz->vertices; i++){
+        for(int j = i + 1; j < matriz->vertices; j++){
+            if(matriz->adyacencias[i][j] != 0){
+                costo += matriz->adyacencias[i][j];
+            }
+        }
+    }
+    return costo;
+}
 
-int main(){
-    //cosas iniciales
-    MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz("entrada.in");
-	if (matrizAdyacencia == NULL) {
-		printf("Archivo no encontrado.");
-		return -1;
+//Recibe la lista de soluciones y su largo para devolver la posicion de la matriz con el menor costo
+int seleccionarMejorSolucion(MatrizGrafo** soluciones,int *canSoluciones){
+    int costo = 9999999;
+    int id = 0;
+    for(int i = 0; i < *canSoluciones; i++){
+        if(costoMatriz(soluciones[i]) < costo){
+            id = i;
+            costo = costoMatriz(soluciones[i]);
+        }
+    }
+    return id;
+}
+MatrizGrafo* algoritmo(char const* entrada){
+     //cosas iniciales
+    MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz(entrada);
+    if (matrizAdyacencia == NULL) {
+		printf("Archivo no encontrado. \n");
+		return NULL;
 	}
+    if(!esConexo(matrizAdyacencia)){
+        printf("Su matriz no es conexa, por favor ingresar un archivo con una matriz conexa.\n");
+        return NULL;
+    }
     int canAbiertos = 0;
 	int canCerrados = 0;
     int canSoluciones = 0;
-    
+
     MatrizGrafo ** soluciones = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canSoluciones);
 	MatrizGrafo ** abiertos = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canAbiertos);
 	MatrizGrafo ** cerrados = (MatrizGrafo **)malloc(sizeof(MatrizGrafo*)*canCerrados);
     abiertos = agregarEstado(abiertos, &canAbiertos, matrizAdyacencia);
     
     soluciones = backTracking(abiertos, cerrados, soluciones, &canAbiertos, &canCerrados, &canSoluciones, matrizAdyacencia);
-    printf("inicio \n");
-    printf("soluciones: %d \n", canSoluciones);
-    for(int i = 0; i < canSoluciones; i++){
-        printf("Solucion %d: \n",i);
-        printf("id: %d \n", soluciones[i]->id);
-        imprimirMatrizAdyacencia(soluciones[i]);
-    }
-    
+
+    int i = seleccionarMejorSolucion(soluciones, &canSoluciones);
+
+    matrizAdyacencia = copiarMatriz(soluciones[i]);
     freeLista(soluciones,&canSoluciones);
-    printf("termine \n");
-    return 0;
+    
+    return(matrizAdyacencia);
 }
+
 /*
 4
 1 2 16

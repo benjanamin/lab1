@@ -58,7 +58,7 @@ void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 // Función que lee el archivo y lo transforma en una matriz
 // Entrada: El nombre del archivo
 // Salida: Estructura MatrizGrafo*.
-MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
+MatrizGrafo* abrirArchivoMatriz(char const* nombreArchivo) {
 	int size, j, i, aux;
 	char ch;
 	FILE *archivo;
@@ -71,7 +71,7 @@ MatrizGrafo* abrirArchivoMatriz(char *nombreArchivo) {
 	i = 0;
 	j = 0;
 	aux = 0;
-	 while (!feof (archivo)){  
+	while (!feof (archivo)){  
       if(i == 0){
 		  fscanf (archivo, "%d", &i);
 	  }
