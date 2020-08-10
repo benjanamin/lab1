@@ -6,6 +6,18 @@
 // Entrada: Número de vértices del grafo
 // Salida: Estructura con el número nodos y una matriz de adyacencia que permita representar un grafo del tamaño indicado.
 // Cada valor dentro de la matriz quedará inicializado como 0.
+int costoMatriz(MatrizGrafo* matriz){
+    int costo = 0;
+    for(int i = 0; i < matriz->vertices; i++){
+        for(int j = i + 1; j < matriz->vertices; j++){
+            if(matriz->adyacencias[i][j] != 0){
+                costo += matriz->adyacencias[i][j];
+            }
+        }
+    }
+    return costo;
+}
+
 MatrizGrafo* generarMatrizGrafo(int vertices) {
 	MatrizGrafo* matriz = (MatrizGrafo*)malloc(sizeof(MatrizGrafo));
 	matriz->vertices = vertices;
@@ -54,6 +66,30 @@ void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
 		}
 		printf("\n");
 	}
+}
+void escribirArchivo(char const* nombreArchivo, MatrizGrafo* matrizOriginal, MatrizGrafo* solucion){
+	FILE *archivo;
+	
+	archivo = fopen(nombreArchivo, "w");
+	fprintf(archivo,"Aristas eliminadas\n");
+	for(int i = 0; i < matrizOriginal->vertices; i++){
+		for(int j = i + 1; j < matrizOriginal->vertices; j++){
+			if(matrizOriginal->adyacencias[i][j] != 0 && solucion->adyacencias[i][j] == 0){
+				fprintf(archivo,"%d %d %d \n",i + 1, j + 1, matrizOriginal->adyacencias[i][j]);
+			}
+		}
+	}
+	fprintf(archivo,"Grafo conexo\n");
+	for(int i = 0; i < matrizOriginal->vertices; i++){
+		for(int j = i + 1; j < matrizOriginal->vertices; j++){
+			if(solucion->adyacencias[i][j] != 0){
+				fprintf(archivo,"%d %d %d \n",i + 1, j + 1, solucion->adyacencias[i][j]);
+			}
+		}
+	}
+	fprintf(archivo, "costo total: %d",costoMatriz(solucion));
+
+	fclose(archivo);
 }
 // Función que lee el archivo y lo transforma en una matriz
 // Entrada: El nombre del archivo

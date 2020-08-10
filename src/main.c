@@ -8,8 +8,10 @@
 int main(int argc, char const *argv[]){
     char const* entrada;
     char const* salida; 
-    if(argc < 2){
+    if(argc != 3){
 
+        printf( "Nombres no ingresados");
+        return 0;
     }
     else{
         entrada = argv[1];
@@ -17,10 +19,11 @@ int main(int argc, char const *argv[]){
     }
 
     
-    
+    MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz(entrada);
     MatrizGrafo* matriz;
     matriz = algoritmo(entrada);
     imprimirMatrizAdyacencia(matriz);
+    escribirArchivo(salida, matrizAdyacencia, matriz);
     printf("termine");
     return 1;
 }

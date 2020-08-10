@@ -109,17 +109,7 @@ MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, Matri
 }
 
 //Recibe una matriz y determina su costo total
-int costoMatriz(MatrizGrafo* matriz){
-    int costo = 0;
-    for(int i = 0; i < matriz->vertices; i++){
-        for(int j = i + 1; j < matriz->vertices; j++){
-            if(matriz->adyacencias[i][j] != 0){
-                costo += matriz->adyacencias[i][j];
-            }
-        }
-    }
-    return costo;
-}
+
 
 //Recibe la lista de soluciones y su largo para devolver la posicion de la matriz con el menor costo
 int seleccionarMejorSolucion(MatrizGrafo** soluciones,int *canSoluciones){
