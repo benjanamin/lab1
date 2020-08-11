@@ -92,12 +92,16 @@ MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** cerrados, Matri
     }
     else{
         aux = abiertos[0];
+        #ifdef DEBUG
+        printf("Matriz Actual: \n");
+        printCurrent(aux);
+        #endif
         cerrados = agregarEstado(cerrados, canCerrados, aux);
         abiertos = sacarElemento(abiertos, canAbiertos);
         if(esConexo(aux) && !esSolucionRepetida(soluciones, canSoluciones, aux) && !sonIguales(aux,inicial)){
             soluciones = agregarEstado(soluciones, canSoluciones, aux);
             abiertos = agregarEstado(abiertos, canAbiertos, aux);
-
+            
             return backTracking(abiertos, cerrados, soluciones, canAbiertos, canCerrados, canSoluciones, inicial);
         }
         

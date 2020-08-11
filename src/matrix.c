@@ -52,7 +52,7 @@ MatrizGrafo* copiarMatriz(MatrizGrafo* aCopiar){
 
 //Funcion que imprime la matriz
 //por favor remplazar el 10 y la cantidad de espacios para que se vea bonito onda si son 100 darle un espacio mas
-void imprimirMatrizAdyacencia(MatrizGrafo* matriz) {
+void printCurrent(MatrizGrafo* matriz) {
 	int i, j;
 	for (i = 0; i < matriz->vertices; i++) {
 		for (j = 0; j < matriz->vertices; j++) {

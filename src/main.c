@@ -21,8 +21,11 @@ int main(int argc, char const *argv[]){
     
     MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz(entrada);
     MatrizGrafo* matriz;
+    #ifdef DEBUG
+    printf("Matriz inicial: \n");
+    printCurrent(matrizAdyacencia);
+    #endif
     matriz = algoritmo(entrada);
-    imprimirMatrizAdyacencia(matriz);
     escribirArchivo(salida, matrizAdyacencia, matriz);
     printf("termine");
     return 1;

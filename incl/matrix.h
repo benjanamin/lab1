@@ -4,7 +4,7 @@
 #include "struct.h"
 
 MatrizGrafo* generarMatrizGrafo(int vertices);
-void imprimirMatrizAdyacencia(MatrizGrafo* matriz);
+void printCurrent(MatrizGrafo* matriz);
 MatrizGrafo* abrirArchivoMatriz(char const*nombreArchivo);
 MatrizGrafo* eliminarCamino(int k, int l, MatrizGrafo* matrix);
 MatrizGrafo* copiarMatriz(MatrizGrafo* aCopiar);
