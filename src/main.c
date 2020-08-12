@@ -28,12 +28,14 @@ int main(int argc, char const *argv[]){
     #endif
     time_t seconds;
     time_t seconds2;
-    //time(&seconds);
+    time(&seconds);
     matriz = algoritmo(entrada);
-    //time(&seconds2);
-    //seconds2 -= seconds;
-    //printf("Seconds since January 1, 1970 = %ld\n", seconds2);
-    //escribirArchivo(salida, matrizAdyacencia, matriz);
+    escribirArchivo(salida,matrizAdyacencia,matriz);
+    time(&seconds2);
+    seconds2 -= seconds;
+    
+    printf("Seconds since January 1, 1970 = %ld\n", seconds2);
+
     printf("termine");
     return 1;
 }

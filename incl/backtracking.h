@@ -3,14 +3,17 @@
 
 #include "struct.h"
 
-MatrizGrafo** agregarEstado(MatrizGrafo** lista, int * elementos, MatrizGrafo* estado);
-MatrizGrafo** sacarElemento(MatrizGrafo** lista, int * elementos);
 int sonIguales(MatrizGrafo* matriz1, MatrizGrafo* matriz2);
-int esSolucionRepetida(MatrizGrafo** soluciones, int* canSoluciones, MatrizGrafo* solucion);
-MatrizGrafo** generarHijos(MatrizGrafo** abiertos, int* canAbiertos, MatrizGrafo* padre);
+
+Lista* generarHijos(Lista* cabeza, MatrizGrafo* padre);
 void freeLista(MatrizGrafo** lista, int* tamano);
-MatrizGrafo** backTracking(MatrizGrafo** abiertos, MatrizGrafo** soluciones,int* canAbiertos, int* canSoluciones, MatrizGrafo* inicial);
+MatrizGrafo* backTracking(Lista* cabeza);
 int seleccionarMejorSolucion(MatrizGrafo** soluciones,int *canSoluciones);
 MatrizGrafo* algoritmo(char const* entrada);
 int sePuedeEliminarCamino(MatrizGrafo* matriz,int i, int j);
+int esReducible(MatrizGrafo* matrix);
+
+Lista* crearNodo(MatrizGrafo* matriz);
+Lista* agregarNodo(Lista* cabeza, Lista* nodo);
+Lista* sacarNodo(Lista* cabeza);
 #endif
