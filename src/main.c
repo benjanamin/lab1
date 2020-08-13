@@ -18,24 +18,14 @@ int main(int argc, char const *argv[]){
         entrada = argv[1];
         salida = argv[2];
     }
-
-    
     MatrizGrafo* matrizAdyacencia = abrirArchivoMatriz(entrada);
     MatrizGrafo* matriz;
     #ifdef DEBUG
     printf("Matriz inicial: \n");
     printCurrent(matrizAdyacencia);
     #endif
-    time_t seconds;
-    time_t seconds2;
-    time(&seconds);
     matriz = algoritmo(entrada);
     escribirArchivo(salida,matrizAdyacencia,matriz);
-    time(&seconds2);
-    seconds2 -= seconds;
-    
-    printf("Seconds since January 1, 1970 = %ld\n", seconds2);
-
     printf("termine");
     return 1;
 }

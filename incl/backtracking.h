@@ -8,7 +8,6 @@ int sonIguales(MatrizGrafo* matriz1, MatrizGrafo* matriz2);
 Lista* generarHijos(Lista* cabeza, MatrizGrafo* padre);
 void freeLista(MatrizGrafo** lista, int* tamano);
 MatrizGrafo* backTracking(Lista* cabeza);
-int seleccionarMejorSolucion(MatrizGrafo** soluciones,int *canSoluciones);
 MatrizGrafo* algoritmo(char const* entrada);
 int sePuedeEliminarCamino(MatrizGrafo* matriz,int i, int j);
 int esReducible(MatrizGrafo* matrix);

@@ -75,15 +75,14 @@ Lista* generarHijos(Lista* cabeza, MatrizGrafo* padre){
                 aux = copiarMatriz(padre);
                 aux = eliminarCamino(i, j, aux);
                 if(esConexo(aux) && aux != NULL){
-                    
                     Lista* nodo = crearNodo(aux);
                     id += 1;
                     aux->idAnterior = padre->id;
                     aux->id = id;
-
-                    
                     cabeza = agregarNodo(cabeza, nodo);
-                    
+                }
+                else{
+                    freeMatriz(aux);
                 }
             }
         }
@@ -126,11 +125,12 @@ MatrizGrafo* backTracking(Lista* cabeza){
         return NULL;
     }
     
-    MatrizGrafo* aux;
+    
     MatrizGrafo* solucion = copiarMatriz(cabeza->matriz);
     int pesoMin = costoMatriz(solucion);
     Lista* puntero = cabeza;
     while(puntero != NULL){
+        MatrizGrafo* aux;
         aux = puntero->matriz;
         int peso = costoMatriz(aux);
         #ifdef DEBUG
@@ -141,15 +141,19 @@ MatrizGrafo* backTracking(Lista* cabeza){
         if(esConexo(aux) && peso < pesoMin &&!sonIguales(aux,solucion)){
             pesoMin = peso;
             solucion = copiarMatriz(aux);
-            
+            freeMatriz(puntero->matriz);
         }
         else{
             puntero = generarHijos(puntero, aux);
             freeMatriz(puntero->matriz);
             
         }
+        Lista* listaux = puntero;
         puntero = puntero->siguiente;
+        
+        free(listaux);
     }
+    printf("termine ciclo \n");
     return solucion;
 }
 MatrizGrafo* algoritmo(char const* entrada){
@@ -169,8 +173,6 @@ MatrizGrafo* algoritmo(char const* entrada){
     
     matriz = backTracking(lista);
     return matriz; 
-    
-
 }
 
 /*
